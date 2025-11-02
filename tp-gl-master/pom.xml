@@ -13,9 +13,28 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <!-- Set compilation target to Java 21 (latest LTS) -->
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <!-- Optional: use release to ensure a reproducible target JDK API level -->
+    <maven.compiler.release>21</maven.compiler.release>
   </properties>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <!-- Ensure a recent maven-compiler-plugin that supports Java 21 -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.11.0</version>
+          <configuration>
+            <release>${maven.compiler.release}</release>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 
   <dependencies>
     <dependency>

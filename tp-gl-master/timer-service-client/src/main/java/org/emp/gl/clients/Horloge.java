@@ -1,26 +1,47 @@
-package org.emp.gl.clients ; 
+package org.emp.gl.clients;
 
-import org.emp.gl.timer.service.TimerService ; 
+import org.emp.gl.timer.service.TimerService;
+import org.emp.gl.timer.service.TimerChangeListener;
+import java.beans.PropertyChangeEvent;
 
+/**
+ * Horloge qui affiche l'heure à chaque seconde
+ * Implémente PropertyChangeListener via TimerChangeListener
+ */
+public class Horloge implements TimerChangeListener {
 
-public class Horloge {
+    private String name;
+    private TimerService timerService;
 
-    String name; 
-    TimerService timerService ; 
-
-
-    public Horloge (String name) {
-        this.name = name ; 
-
-        System.out.println ("Horloge "+name+" initialized!") ;
+    public Horloge(String name, TimerService timerService) {
+        this.name = name;
+        this.timerService = timerService;
+        
+        // S'inscrire en tant qu'observer
+        this.timerService.addTimeChangeListener(this);
+        
+        System.out.println("Horloge " + name + " initialized!");
     }
 
-    public void afficherHeure () {
-        if (timerService != null)
-            System.out.println (name + " affiche " + 
-                                timerService.getHeures() +":"+
-                                timerService.getMinutes()+":"+
-                                timerService.getSecondes()) ;
+    /**
+     * ✅ Méthode de PropertyChangeListener
+     * C'est LA SEULE méthode à implémenter maintenant !
+     */
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        // Afficher l'heure seulement quand les secondes changent
+        if (SECONDE_PROP.equals(evt.getPropertyName())) {
+            afficherHeure();
+        }
     }
 
+    public void afficherHeure() {
+        if (timerService != null) {
+            System.out.println(name + " affiche " +
+                    String.format("%02d:%02d:%02d",
+                            timerService.getHeures(),
+                            timerService.getMinutes(),
+                            timerService.getSecondes()));
+        }
+    }
 }
